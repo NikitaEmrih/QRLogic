@@ -1,0 +1,371 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+Manage Subscription Page
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'managesub_app/css/managesub.css' %}">
+{% endblock %}
+
+{% block body %}
+<main>
+    <form method="post">
+        {% csrf_token %}
+        <div class="title">
+            <h1 class="title-text">Subscription Management Center</h1>
+        </div>
+        <div style="display: flex; flex-direction: column; gap:20px">
+            <div class="current-plan">
+                <div class="plan-titled" ><p class="current-plan-title">Your plan:   {{ user.profile.subscription.capitalize }}</p></div>
+                <div class="body-of-plan">
+                    <div class="info-about-plan">
+                        {% if user.profile.subscription == 'pro' %}
+                            <ul>
+                                <!-- <li style="list-style: none;font-size:24px; text-align:center;">Subscription Features</li>
+                                <li style="list-style: none">   </li> -->
+                                <li>Includes everything in "Standard."</li>
+                                <li>Up to 100 QR codes</li>
+                                <li>Advanced designs.</li>
+                                <li>Priority support.</li>
+                            </ul>
+                        {% endif %}
+                        {% if user.profile.subscription == 'standart' %}
+                            <ul>
+                                <!-- <li style="list-style: none;font-size:24px; text-align:center;">Subscription Features</li>
+                                <li style="list-style: none">   </li> -->
+                                <li>Includes everything in "Free."</li>
+                                <li>Up to 10 QR codes.</li>
+                                <li>Full color and logo customization.</li>
+                                <li>High-quality downloads.</li>
+                            </ul>
+                        {% endif %}
+                        {% if user.profile.subscription == 'free' %}
+                            <ul>
+                                <!-- <li style="list-style: none;font-size:24px; text-align:center;">Subscription Features</li>
+                                <li style="list-style: none">   </li> -->
+                                <li>1 QR code for up to 6 months</li>
+                                <li>Simple setup, no skills needed.</li>
+                                <li>Basic color options.</li>
+                                <li>Perfect for personal use.</li>
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div class="buttons">
+                        <button type="button" class="change-button button">
+                            Change Plan
+                        </button>
+                        <button type="button" class="cancel-button button">
+                            Cancel Plan
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% if user.profile.commerce == True %}
+                <div class="current-plan">
+                    <div class="plan-titled" ><p class="current-plan-title">Commerce plan</p></div>
+                    <div class="body-of-plan">
+                        <div class="info-about-plan">
+                            <ul>
+                                <li>Current slot count: {{ user.profile.commerce_cells }} (avaible: {{ avaible_cells }})</li>
+                                <li>Create QR codes for text</li>
+                                <li>1 extra slot = 0.10 USD</li>
+                            </ul>
+                        </div>
+                        <div class="buttons">
+                            <button type="button" class="buy-slots-button button">Buy slots</button>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="popup-cancel">
+            <div class="confirmation">
+                <p>Are you sure you want to cancel your subscription?</p>
+                <p class="cannot-cancel">If you cancel your subscription, you will be assigned the "Free" plan. You cannot cancel the "Free" plan.</p>
+                <div class="popup-buttons" >
+                    <button class="button-popup-cancel kill-sub" name="action" value="killsub" >Kill my sub</button>
+                    <button class="button-popup-cancel save-sub" >Save it</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay-slots">
+            <div class="slots-div">
+                <div class="slots-p-close">
+                    <p>Select the number of slots you need</p>
+                    <button type="button" class="slots-close"><img class="slots-close-img" src="{% static 'home_app/images/cross.svg' %}"></button>
+                </div>
+                <div class="slots-inputs">
+                    <p>Fast slot selection</p>
+                    <div class="slots-offers">
+                        <div class="slots-offer">
+                            <input type="radio" class="offer-input" value="10" name="offer" id="ten">
+                            <label for="ten">10</label>
+                        </div>
+                        <div class="slots-offer">
+                            <input type="radio" class="offer-input" value="20" name="offer" id="twenty">
+                            <label for="twenty">20</label>
+                        </div>
+                        <div class="slots-offer">
+                            <input type="radio" class="offer-input" value="30" name="offer" id="thirsty">
+                            <label for="thirsty">30</label>
+                        </div>
+                        <div class="slots-offer">
+                            <input type="radio" class="offer-input" value="50" name="offer" id="fifty">
+                            <label for="fifty">50</label>
+                        </div>
+                        <div class="slots-offer">
+                            <input type="radio" class="offer-input" value="100" name="offer" id="hundred">
+                            <label for="hundred">100</label>
+                        </div>
+                    </div>
+                    <div class="slots-input">
+                        <input type="number" class="input-slots" maxlength="4" min="0" placeholder="Slot count" name="slot" id="slot">
+                    </div>
+                </div>
+                <div class="slots-button">
+                    <button type="submit" class="buy-button slots-buy-button" name="buy-button">Buy</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup">
+            <div class="choice-plan">
+                <h3>Pick the plan you want</h3>
+                <button type="button" class="close-popup"><img class="close-popup-img"  src="{% static 'home_app/images/cross.svg' %}" alt=""></button>
+                <div class="plans">
+                    <div class="plan">
+                        <div class="plan-title">
+                            <p class="plan-title-text">Free</p>
+                        </div>
+                        <div class="info-about-plan">
+                            <div class="info">
+                                <ul>
+                                    <li>1 QR code for up to 1 months</li>
+                                    <li>Simple setup, no skills needed.</li>
+                                    <li>Basic color options.</li>
+                                    <li>Perfect for personal use.</li>
+                                </ul>
+                            </div>
+                            <div class="pricing">
+                                <p class="price">Free</p>
+                                <p class="permonth">USD/month</p>
+                            </div>
+                        {% if user.profile.subscription != 'free' %}
+                            <button type="button" name="plans"  value="free" class="buy-now free-sub">BUY NOW</button>
+                        {% else %}
+                            <button type="button" name="plans"  value="free" class="buy-now free-sub" disabled>Already in use</button>
+                        {% endif %}
+                        </div>
+                    </div>
+                
+                    <div class="plan">
+                        <div class="plan-title">
+                            <p class="plan-title-text">Standart</p>
+                        </div>
+                        <div class="info-about-plan">
+                            <div class="info">
+                                <ul>
+                                    <li>Includes everything in "Free."</li>
+                                    <li>Up to 10 QR codes.</li>
+                                    <li>Full color and logo customization.</li>
+                                    <li>High-quality downloads.</li>
+                                </ul>
+                            </div>
+                            <div class="pricing">
+                                <p class="price">$2</p>
+                                <p class="permonth">USD/month</p>
+                            </div>
+                            {% if user.profile.subscription != 'standart' %}
+                                <button type="button" name="plans" value="standart" class="buy-now standart-sub">BUY NOW</button>
+                            {% else %}
+                                <button type="button" name="plans" value="standart" class="buy-now standart-sub" disabled>Already in use</button>
+                            {% endif %}
+                        </div>  
+                    </div>
+                
+                    <div class="plan">
+                        <div class="plan-title">
+                            <p class="plan-title-text">Pro</p>
+                        </div>
+                        <div class="info-about-plan">
+                            <div class="info">
+                                <ul>
+                                    <li>Includes everything in "Standard."</li>
+                                    <li>Up to 100 QR codes</li>
+                                    <li>Advanced designs.</li>
+                                    <li>Priority support.</li>
+                                </ul>
+                            </div>
+                            <div class="pricing">
+                                <p class="price">$10</p>
+                                <p class="permonth">USD/month</p>
+                            </div>
+                            {% if user.profile.subscription != 'pro' %}
+                                <button type="button" name="plans" value="pro" class="buy-now pro-sub">BUY NOW</button>
+                            {% else %}
+                                <button type="button" name="plans" value="pro" class="buy-now pro-sub" disabled>Already in use</button>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="plan">
+                        <div class="plan-title">
+                            <p class="plan-title-text">Commerce</p>
+                        </div>
+                        <div class="info-about-plan">
+                            <div class="info">
+                                <ul>
+                                    <li>One-time purchase</li>
+                                    <li>Create QR codes for text</li>
+                                    <li>20 slots included</li>
+                                    <li>Extra slots cost extra</li>
+                                </ul>
+                            </div>
+                            <div class="pricing">
+                                <p class="price">$100</p>
+                                <p class="permonth">USD</p>
+                            </div>
+                            {% if user.profile.commerce == False %}
+                                <button type="button" name="plans" value="pro" class="buy-now commerce-sub">BUY NOW</button>
+                            {% else %}
+                                <button type="button" name="plans" value="pro" class="buy-now commerce-sub" disabled>Already buyed</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="popup-entercard free-entercard">
+            <div class="overlay-entercard">
+                <div class="entercard">
+                    <p class="entercard-p">
+                        Enter card details
+                    </p>
+                    <div class="cardnumber">
+                        <p>Card number</p>
+                        <input placeholder="0000-0000-0000-0000" type="text"  maxlength="cardnumber" id="cardnumber" class="cardnumber-free">
+                    </div>
+                    <div class="exp-cvv">
+                        <div class="expiration">
+                            <p>Expiration date</p>
+                            <input type="text" name="expiration-date"  placeholder="MM/YY" id="expiration-date-free" class="expiration-free">
+                        </div>
+                        <div class="cvv">
+                            <p>Security code</p>
+                            <input type="text" name="expiration-date"  maxlength="4" id="expiration-date">
+                            <div class="info-security">
+                                <img src="{% static 'home_app/images/infoimg.png' %}" alt="infoimg">
+                            </div>
+                            <div class="infocvv">
+                                <p>The security code or CVV/CVC is the three or four digit code on the back of your card</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="subscribe-close-popup"><img class="subscribe-close-popup-img" src="{% static 'home_app/images/cross.svg' %}" alt=""></button>
+                    <button class="subscribe-free subscribe"  value="free" name="subscribe" type="submit">Subscribe</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup-entercard standart-entercard">
+            <div class="overlay-entercard">
+                <div class="entercard">
+                    <p class="entercard-p">
+                        Enter card details
+                    </p>
+                    <div class="cardnumber">
+                        <p>Card number</p>
+                        <input placeholder="0000-0000-0000-0000"  type="text" maxlength="cardnumber" id="cardnumber" class="cardnumber-standart">
+                    </div>
+                    <div class="exp-cvv">
+                        <div class="expiration">
+                            <p>Expiration date</p>
+                            <input type="text" name="expiration-date"  placeholder="MM/YY" id="expiration-date-standart" class="expiration-standart">
+                        </div>
+                        <div class="cvv">
+                            <p>Security code</p>
+                            <input type="text" name="expiration-date"  maxlength="4" id="expiration-date">
+                            <div class="info-security">
+                                <img src="{% static 'home_app/images/infoimg.png' %}" alt="infoimg">
+                            </div>
+                            <div class="infocvv">
+                                <p>The security code or CVV/CVC is the three or four digit code on the back of your card</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="subscribe-close-popup"><img class="subscribe-close-popup-img" src="{% static 'home_app/images/cross.svg' %}" alt=""></button>
+                    <button class="subscribe-standart subscribe" value="standart" name="subscribe" type="submit">Subscribe</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup-entercard pro-entercard">
+            <div class="overlay-entercard">
+                <div class="entercard">
+                    <p class="entercard-p">
+                        Enter card details
+                    </p>
+                    <div class="cardnumber">
+                        <p>Card number</p>
+                        <input placeholder="0000-0000-0000-0000"  type="text" maxlength="cardnumber" id="cardnumber" class="cardnumber-pro">
+                    </div>
+                    <div class="exp-cvv">
+                        <div class="expiration">
+                            <p>Expiration date</p>
+                            <input type="text" name="expiration-date"  placeholder="MM/YY" id="expiration-date-pro" class="expiration-pro">
+                        </div>
+                        <div class="cvv">
+                            <p>Security code</p>
+                            <input type="text" name="expiration-date"  maxlength="4" id="expiration-date">
+                            <div class="info-security">
+                                <img src="{% static 'home_app/images/infoimg.png' %}" alt="infoimg">
+                            </div>
+                            <div class="infocvv">
+                                <p>The security code or CVV/CVC is the three or four digit code on the back of your card</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="subscribe-close-popup"><img class="subscribe-close-popup-img" src="{% static 'home_app/images/cross.svg' %}" alt=""></button>
+                    <button class="subscribe-pro subscribe" value="pro" name="subscribe" type="submit">Subscribe</button>
+                </div>
+            </div>
+        </div>
+        <div class="popup-entercard commerce-entercard">
+            <div class="overlay-entercard">
+                <div class="entercard">
+                    <p class="entercard-p">
+                        Enter card details
+                    </p>
+                    <div class="cardnumber">
+                        <p>Card number</p>
+                        <input placeholder="0000-0000-0000-0000"  type="text" maxlength="cardnumber" id="cardnumber" class="cardnumber-commerce">
+                    </div>
+                    <div class="exp-cvv">
+                        <div class="expiration">
+                            <p>Expiration date</p>
+                            <input type="text" name="expiration-date"  placeholder="MM/YY" id="expiration-date-pro" class="expiration-commerce">
+                        </div>
+                        <div class="cvv">
+                            <p>Security code</p>
+                            <input type="text" name="expiration-date"  maxlength="4" id="expiration-date">
+                            <div class="info-security">
+                                <img src="{% static 'home_app/images/infoimg.png' %}" alt="infoimg">
+                            </div>
+                            <div class="infocvv">
+                                <p>The security code or CVV/CVC is the three or four digit code on the back of your card</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="subscribe-close-popup"><img class="subscribe-close-popup-img" src="{% static 'home_app/images/cross.svg' %}" alt=""></button>
+                    <button class="subscribe-commerce subscribe" value="commerce" name="subscribe" type="submit">Subscribe</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</main>
+<script src="{% static 'managesub_app/js/managesub.js' %}"></script>
+{% endblock %}

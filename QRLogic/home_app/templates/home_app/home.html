@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+Home page 
+{% endblock %}
+
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'home_app/css/homee.css' %}">
+
+{% endblock %}
+
+
+{% block body %}
+<main>
+    <div class="h1-title">
+        <h1>Wanna whip up a QR code? Piece of cake! QRLogic's got you covered!</h1>
+    </div>
+    <div class="plans">
+        <div class="plan">
+            <div class="plan-title">
+                <p class="plan-title-text">Free</p>
+            </div>
+            <div class="info-about-plan">
+                <div class="info">
+                    <ul>
+                        <li>1 QR code for up to 6 months</li>
+                        <li>Simple setup, no skills needed.</li>
+                        <li>Basic color options.</li>
+                        <li>Perfect for personal use.</li>
+                        <li>Completely free, no hidden fees!</li>
+                    </ul>
+                </div>
+                <div class="pricing">
+                    <p class="price">Free</p>
+                    <p class="permonth"></p>
+                </div>
+            <button class="buy-now"><a href="{% url 'managesub_app' %}">BUY NOW</a></button>
+            </div>
+        </div>
+
+        <div class="plan">
+            <div class="plan-title">
+                <p class="plan-title-text">Standart</p>
+            </div>
+            <div class="info-about-plan">
+                <div class="info">
+                    <ul>
+                        <li>Includes everything in "Free."</li>
+                        <li>Up to 10 QR codes.</li>
+                        <li>Full color and logo customization.</li>
+                        <li>High-quality downloads.</li>
+                    </ul>
+                </div>
+                <div class="pricing">
+                    <p class="price">$2</p>
+                    <p class="permonth">USD/month</p>
+                </div>
+            <button class="buy-now"><a href="{% url 'managesub_app' %}">BUY NOW</a></button>
+            </div>
+        </div>
+
+        <div class="plan">
+            <div class="plan-title">
+                <p class="plan-title-text">Pro</p>
+            </div>
+            <div class="info-about-plan">
+                <div class="info">
+                    <ul>
+                        <li>Includes everything in "Standard."</li>
+                        <li>Up to 100 QR codes</li>
+                        <li>Advanced designs.</li>
+                        <li>Priority support.</li>
+                    </ul>
+                </div>
+                <div class="pricing">
+                    <p class="price">$10</p>
+                    <p class="permonth">USD/month</p>
+                </div>
+            <button class="buy-now"><a href="{% url 'managesub_app' %}">BUY NOW</a></button>
+            </div>
+        </div>
+
+        <div class="plan">
+            <div class="plan-title">
+                <p class="plan-title-text">Commerce</p>
+            </div>
+            <div class="info-about-plan">
+                <div class="info">
+                    <ul>
+                        <li>One-time purchase</li>
+                        <li>Create QR codes for text</li>
+                        <li>20 slots included</li>
+                        <li>Extra slots cost extra</li>
+                    </ul>
+                </div>
+                <div class="pricing">
+                    <p class="price">$100</p>
+                    <p class="permonth">USD</p>
+                </div>
+            <button class="buy-now"><a href="{% url 'managesub_app' %}">BUY NOW</a></button>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
